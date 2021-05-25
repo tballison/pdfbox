@@ -67,7 +67,9 @@ public final class ExtractText
     private static final String ALWAYSNEXT = "-alwaysNext";
     private static final String ROTATION_MAGIC = "-rotationMagic";
     private static final String STD_ENCODING = "UTF-8";
+    private static final String PAGE_DELIMITED = "-pageDelimited";
 
+    private static final String DEFAULT_PAGE_DELIMITER = "\u000c";
     /*
      * debug flag
      */
@@ -110,6 +112,7 @@ public final class ExtractText
         boolean separateBeads = true;
         boolean alwaysNext = false;
         boolean rotationMagic = false;
+        boolean pageDelimited = false;
         @SuppressWarnings({"squid:S2068"})
         String password = "";
         String encoding = STD_ENCODING;
@@ -185,6 +188,10 @@ public final class ExtractText
             else if( args[i].equals( CONSOLE ) )
             {
                 toConsole = true;
+            }
+            else if( args[i].equals( PAGE_DELIMITED ) )
+            {
+                pageDelimited = true;
             }
             else
             {
@@ -269,7 +276,9 @@ public final class ExtractText
                     }
                     stripper.setSortByPosition(sort);
                     stripper.setShouldSeparateByBeads(separateBeads);
-
+                    if (pageDelimited) {
+                        stripper.setPageEnd("\u000c");
+                    }
                     // Extract text for main document:
                     extractPages(startPage, Math.min(endPage, document.getNumberOfPages()), 
                                  stripper, document, output, rotationMagic, alwaysNext);
